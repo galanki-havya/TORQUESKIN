@@ -1,345 +1,298 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Shield, ChevronDown, Zap, FileText, Activity, 
+  Shield, ChevronDown, Zap, Activity, 
   Droplets, Sun, Wind, Eye, Layers, Wrench, CheckCircle2,
-  MousePointer2
+  ArrowRight, ShieldCheck, ThermometerSun, X, Maximize2, MousePointer2, ChevronUp
 } from 'lucide-react';
-import bgTexture from '../assets/bg-texture.jpg';
 
-import clearImage from '../assets/clear-ppf.png';
-import matteImage from '../assets/matte-ppf.png';
-import colorImage from '../assets/colour-ppf.png';
-import sunfilmImage from '../assets/sun-film2.png';
-import windshieldImage from '../assets/windshield.png';
+import bgTexture from '../assets/bg-texture.jpg';
+import armorPro from "../assets/armor-pro.jpg";
+import armor from "../assets/armor.jpg";
+import element from "../assets/element.jpg";
+import satinLite from "../assets/satin-lite.jpg";
+import sunfilm from "../assets/sunfilm.jpg";
 
 const Products = () => {
-  // Updated state to null initially
   const [activeTab, setActiveTab] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedImg, setSelectedImg] = useState(null);
   const navigate = useNavigate();
+  
+  const detailRef = useRef(null);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (activeTab) {
+      if (window.innerWidth < 1024) {
+        detailRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
   }, [activeTab]);
 
   const productData = {
-    "Clear PPF": {
-      imgSrc: clearImage,
+    "Armor Pro": {
+      imgSrc: armorPro,
       category: "Paint Protection Film",
-      tagline: "Transparent High-Gloss Armor",
-      description: "Advanced TPU protection available in three elite tiers to preserve factory paint with self-healing technology and optical clarity.",
-      tiers: [
-        { name: "Torqueskin Element", detail: "5 Years Warranty" },
-        { name: "Torqueskin Armor", detail: "7 Years Warranty" },
-        { name: "Torqueskin Armor Pro", detail: "10 Years Warranty" }
-      ],
+      description: "Our flagship high-gloss protection solution featuring a Nano Hydrophobic topcoat and advanced Lubrizol material for maximum durability.",
+      warranty: "10 Years",
       specs: [
-        { label: "Base Material", value: "Aliphatic TPU" },
-        { label: "Thickness", value: "195+ Microns" },
-        { label: "Finish", value: "Ultra Glossy" },
-        { label: "Healing", value: "Instant Self-Healing" }
+        { label: "Material", value: "Lubrizol Aliphatic TPU" },
+        { label: "Topcoat", value: "Nano Hydrophobic" },
+        { label: "Adhesive", value: "Ashland Glue" }
       ],
-      features: ["Optical Grade Transparency", "Non-Yellowing UV Shield", "Advanced Puncture Resistance"],
       performance: [
-        { icon: <Activity />, title: "Self-Healing", desc: "Heat-activated swirl removal" },
-        { icon: <Droplets />, title: "Hydrophobic", desc: "Easy-clean water repelling" },
-        { icon: <Eye />, title: "Ultra Clarity", desc: "Zero orange peel texture" },
-        { icon: <Wind />, title: "Impact Guard", desc: "High-density rock chip defense" }
-      ],
-      composition: ["High-Gloss Clear Coat", "Self-Healing Layer", "Aliphatic TPU Base", "Pressure Sensitive Adhesive"],
-      maintenance: "Use pH-neutral soap. Avoid pressure washing within 48 hours of install."
+        { icon: <Activity size={20} />, title: "Self-Healing", desc: "Heat activated" },
+        { icon: <Shield size={20} />, title: "Anti-Scratch", desc: "Surface Protection" },
+        { icon: <Droplets size={20} />, title: "Hydrophobic", desc: "Water repelling" },
+        { icon: <Zap size={20} />, title: "Extreme Gloss", desc: "Mirror finish" }
+      ]
     },
-    "Matte PPF": {
-      imgSrc: matteImage,
+    "Armor": {
+      imgSrc: armor,
       category: "Paint Protection Film",
-      tagline: "Torqueskin Satin Lite",
-      description: "Transform gloss into a premium satin-matte finish while maintaining heavy-duty environmental protection.",
-      tiers: [{ name: "Torqueskin Satin Lite", detail: "5 Years Warranty" }],
+      description: "Engineered for high-performance defense, Armor provides a crystal-clear shield against debris while maintaining original paint depth with American Tech Nano Ceramic technology.",
+      warranty: "7 Years",
       specs: [
-        { label: "Base Material", value: "Matte TPU" },
-        { label: "Thickness", value: "190+ Microns" },
-        { label: "Appearance", value: "Satin Stealth" },
-        { label: "Maintenance", value: "Fingerprint Resistant" }
+        { label: "Technology", value: "American Tech Nano Ceramic" },
+        { label: "Core", value: "Aliphatic TPU" },
+        { label: "Adhesive", value: "Pressure Sensitive" }
       ],
-      features: ["Satin Silk Texture", "Deep Matte Pigmentation", "Stain Resistance Coating"],
       performance: [
-        { icon: <Shield />, title: "Satin Finish", desc: "Non-reflective stealth look" },
-        { icon: <Sun />, title: "Anti-Yellowing", desc: "High UV stability" },
-        { icon: <Droplets />, title: "Dirt Repellent", desc: "Low surface energy coating" },
-        { icon: <Activity />, title: "Edge Tuck", desc: "High stretch for seamless wrap" }
-      ],
-      composition: ["Matte Satin Topcoat", "Impact-Absorption TPU", "Non-Yellowing Adhesive"],
-      maintenance: "Avoid waxes or polishes. Use specific matte-safe cleaning agents."
+        { icon: <Wind size={20} />, title: "Impact Guard", desc: "Debris Protection" },
+        { icon: <ShieldCheck size={20} />, title: "Self-Cleaning", desc: "Easy Maintenance" },
+        { icon: <Activity size={20} />, title: "Heat Recovery", desc: "Swirl Healing" },
+        { icon: <CheckCircle2 size={20} />, title: "UV Stable", desc: "Anti-Yellowing" }
+      ]
     },
-    "Color PPF": {
-      imgSrc: colorImage,
+    "Element": {
+      imgSrc: element,
       category: "Paint Protection Film",
-      tagline: "Rainbow Edition Series",
-      description: "Elite 7-layer TPU structure with nano-pigments for deep color transformation and maximum shield strength.",
-      tiers: [
-        { name: "Torqueskin Rainbow", detail: "Black Edition" },
-        { name: "Torqueskin Rainbow", detail: "White Edition" }
-      ],
+      description: "A reliable entry-level shield featuring an oxidation barrier and anti-yellowing technology to preserve vehicle aesthetics across all paint surfaces.",
+      warranty: "5 Years",
       specs: [
-        { label: "Structure", value: "7-Layer TPU" },
-        { label: "Color Type", value: "Nano-Pigment" },
-        { label: "Finish", value: "Paint-Like Depth" },
-        { label: "UV Block", value: "99% Protection" }
+        { label: "Material", value: "TPU Base" },
+        { label: "Technology", value: "Oxidation Barrier" },
+        { label: "Properties", value: "Anti-Yellowing" }
       ],
-      features: ["Color Stability Tech", "High Impact Shield", "Nano-Pigment Saturation"],
       performance: [
-        { icon: <Activity />, title: "Color Depth", desc: "Rich pigment saturation" },
-        { icon: <Shield />, title: "Armor Level", desc: "Heavy-duty stone guard" },
-        { icon: <Droplets />, title: "Self-Cleaning", desc: "Nano-ceramic top coat" },
-        { icon: <Sun />, title: "Fade Guard", desc: "Extreme pigment stability" }
+        { icon: <CheckCircle2 size={20} />, title: "Anti-Yellow", desc: "UV Resistant" },
+        { icon: <Droplets size={20} />, title: "Hydrophobic", desc: "Surface Guard" },
+        { icon: <Eye size={20} />, title: "Crystal Clear", desc: "Invisible Shield" },
+        { icon: <Layers size={20} />, title: "Oxidation", desc: "Chemical Barrier" }
+      ]
+    },
+    "Satin Lite": {
+      imgSrc: satinLite,
+      category: "Matte Paint Protection",
+      description: "Transform your vehicle with a premium satin-matte texture. Engineered with Lubrizol material and Ashland glue for industry-leading adhesion and a silk finish.",
+      warranty: "5 Years",
+      specs: [
+        { label: "Material", value: "Lubrizol TPU" },
+        { label: "Adhesive", value: "Ashland Glue" },
+        { label: "Finish", value: "Satin Matte" }
       ],
-      composition: ["Nano-Pigment Layer", "7-Layer TPU Core", "UV Stabilizer Film"],
-      maintenance: "Clean with soft microfiber. Treat like high-end automotive paint."
+      performance: [
+        { icon: <Layers size={20} />, title: "Silk Texture", desc: "Satin Finish" },
+        { icon: <Shield size={20} />, title: "Stain Resist", desc: "Surface Protection" },
+        { icon: <Wind size={20} />, title: "Anti-Yellow", desc: "Color Stable" },
+        { icon: <Activity size={20} />, title: "Oxidation", desc: "Chemical barrier" }
+      ]
     },
     "Sunfilm": {
-      imgSrc: sunfilmImage,
-      category: "Window Tinting Solution",
-      tagline: "Thermal Management Series",
-      description: "High-performance automotive window films designed for maximum heat rejection and cabin cooling.",
-      tiers: [
-        { name: "Torqueskin Therm-X", detail: "3 & 5 Year Options" },
-        { name: "Torqueskin Optix", detail: "Lifetime Warranty" }
-      ],
+      imgSrc: sunfilm,
+      category: "Window Tinting",
+      description: "Professional grade solar protection that blocks 95% of harmful UV rays while providing superior heat protection and reduced glare for a comfortable drive.",
+      warranty: "Pro Series",
       specs: [
-        { label: "IR Rejection", value: "Up to 98%" },
-        { label: "UV Protection", value: "99.9% Block" },
-        { label: "Visibility", value: "High Definition" },
-        { label: "Glare", value: "Reduced Eye Strain" }
+        { label: "UV Block", value: "95% Protection" },
+        { label: "Signal", value: "Signal-Free Tech" },
+        { label: "Visibility", value: "Reduced Glare" }
       ],
-      features: ["Heat Management Tech", "Signal Friendly Design", "HD Optical Clarity"],
       performance: [
-        { icon: <Sun />, title: "Heat Block", desc: "Superior TSER performance" },
-        { icon: <Eye />, title: "Privacy", desc: "Enhanced cabin security" },
-        { icon: <Wind />, title: "Cooling", desc: "Reduces AC load" },
-        { icon: <Activity />, title: "Purity", desc: "Zero signal interference" }
-      ],
-      composition: ["Scratch Resistant Coating", "Nano-Ceramic Layer", "Deep Dye Polyester", "UV Adhesive"],
-      maintenance: "Clean with ammonia-free glass cleaner and soft cloth only."
-    },
-    "Windshield Protection": {
-      imgSrc: windshieldImage,
-      category: "External Glass Armor",
-      tagline: "TPU Based WPF",
-      description: "Impact-absorbing exterior film for windshields to prevent chips and cracks from road debris.",
-      tiers: [{ name: "Torqueskin WPF", detail: "Impact Absorption" }],
-      specs: [
-        { label: "Material", value: "Specialized TPU" },
-        { label: "Hardness", value: "9H Equivalent" },
-        { label: "Clarity", value: "Optical Grade" },
-        { label: "Scratch", value: "Wiper Resistant" }
-      ],
-      features: ["Grit-Guard Coating", "Energy Dispersion Layer", "Ultra-Smooth Finish"],
-      performance: [
-        { icon: <Wind />, title: "Impact Defense", desc: "Rock chip energy absorption" },
-        { icon: <Droplets />, title: "Hydrophobic", desc: "Enhanced wet weather vision" },
-        { icon: <Shield />, title: "Glass Guard", desc: "Prevents costly glass replacement" },
-        { icon: <Eye />, title: "Distortion Free", desc: "Zero vision warping" }
-      ],
-      composition: ["Hydrophobic Topcoat", "9H Shock Absorption TPU", "Optical Grade Adhesive"],
-      maintenance: "Ensure wiper blades are clean and free of grit to avoid surface scratches."
+        { icon: <Sun size={20} />, title: "UV Guard", desc: "95% Block" },
+        { icon: <ThermometerSun size={20} />, title: "Heat Protect", desc: "Thermal Shield" },
+        { icon: <Eye size={20} />, title: "Reduced Glare", desc: "High Clarity" },
+        { icon: <Zap size={20} />, title: "Signal-Free", desc: "No Interference" }
+      ]
     }
   };
 
   const current = activeTab ? productData[activeTab] : null;
 
   return (
-    <div 
-      className="min-h-screen text-white font-sans overflow-x-hidden bg-[#0b0b14]"
-      style={{ 
-        backgroundImage: `url(${bgTexture})`,
-        backgroundAttachment: 'fixed',
-        backgroundSize: 'cover'
-      }}
-    >
-      <div className="min-h-screen w-full bg-black/40 pt-32 pb-16 px-6">
-        
-        {/* Dropdown Section */}
-        <div className="max-w-xl mx-auto mb-16 relative z-50">
-          <p className="text-[#d4af37] text-[10px] font-black uppercase tracking-[0.4em] mb-4 text-center italic">
-            Select a solution to view details
-          </p>
-          <button 
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className={`w-full bg-black/80 border ${isDropdownOpen ? 'border-[#d4af37]' : 'border-white/10'} p-5 rounded-xl flex justify-between items-center font-black italic uppercase text-xl tracking-tight hover:border-[#d4af37]/50 transition-all shadow-2xl backdrop-blur-xl`}
-          >
-            {activeTab || "Select Products"}
-            <ChevronDown size={20} className={`text-[#d4af37] transition-transform duration-500 ${isDropdownOpen ? 'rotate-180' : ''}`} />
-          </button>
+    <div className="min-h-screen bg-[#1a1a2e] text-white font-sans selection:bg-[#d4af37]" 
+         style={{ backgroundImage: `url(${bgTexture})`, backgroundAttachment: 'fixed', backgroundSize: 'cover' }}>
+      
+      <div className="min-h-screen w-full bg-black/60 pt-20 md:pt-24 pb-10 px-4 md:px-6">
+        <div className="max-w-7xl mx-auto relative z-10">
           
-          <AnimatePresence>
-            {isDropdownOpen && (
-              <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                className="absolute w-full bg-black border border-white/10 mt-2 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden z-[60]">
-                {Object.keys(productData).map((name) => (
-                  <button key={name} className="w-full text-left px-6 py-4 hover:bg-[#d4af37] hover:text-black font-bold italic uppercase border-b border-white/5 transition-all text-sm group flex justify-between items-center"
-                    onClick={() => { setActiveTab(name); setIsDropdownOpen(false); }}>
-                    {name}
-                    <Zap size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </button>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        <AnimatePresence mode="wait">
-          {!activeTab ? (
-            /* Initial State Before Selection */
-            <motion.div 
-              key="placeholder"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.05 }}
-              className="max-w-4xl mx-auto text-center py-20 border border-white/5 bg-black/20 rounded-3xl backdrop-blur-sm"
-            >
-              <div className="inline-block p-6 bg-white/5 rounded-full mb-8">
-                <MousePointer2 size={48} className="text-[#d4af37] animate-bounce" />
-              </div>
-              <h2 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter mb-4">Explore Products</h2>
+          <div className="flex flex-col items-center text-center space-y-6 md:space-y-8 mb-10 md:mb-12">
+            <div className="space-y-4 md:space-y-6">
+              <h1 className="text-5xl md:text-8xl font-black italic uppercase tracking-tighter leading-none text-white">
+                OUR<span className="text-[#d4af37] ml-2 md:ml-4">Products.</span>
+              </h1>
               
-            </motion.div>
-          ) : (
-            /* Product Details State */
-            <motion.div 
-              key={activeTab} 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              exit={{ opacity: 0, y: -20 }} 
-              className="container mx-auto max-w-7xl"
-            >
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
-                
-                {/* Left Column: Image & Quick Specs */}
-                <div className="lg:col-span-5 space-y-6">
-                  <div className="relative aspect-square md:aspect-video bg-black/60 border border-white/10 rounded-2xl overflow-hidden shadow-2xl group flex items-center justify-center cursor-zoom-in">
-                     {current.imgSrc ? (
-                       <motion.img 
-                          initial={{ scale: 1.2, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          whileHover={{ scale: 1.15 }} 
-                          transition={{ duration: 0.6, ease: "easeOut" }}
-                          src={current.imgSrc} 
-                          className="w-full h-full object-cover z-20" 
-                          alt={activeTab} 
-                       />
-                     ) : (
-                       <Shield size={100} className="text-[#d4af37] opacity-20 absolute" />
-                     )}
-                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent z-30 pointer-events-none" />
-                     
-                     <div className="absolute bottom-4 right-4 z-40 opacity-0 group-hover:opacity-100 transition-opacity bg-black/50 p-2 rounded-lg backdrop-blur-md border border-white/10">
-                        <Eye size={14} className="text-[#d4af37]" />
-                     </div>
-                  </div>
+              <div className="flex justify-center items-center gap-2 md:gap-4 text-[#d4af37]">
+                <div className="hidden sm:block h-[1px] w-6 md:w-12 bg-[#d4af37]/40" />
+                <ArrowRight size={14} /> 
+                <span className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.3em] md:tracking-[0.4em] whitespace-nowrap">
+                  Select a product from the lineup
+                </span>
+                <ArrowRight size={14} className="rotate-180" />
+                <div className="hidden sm:block h-[1px] w-6 md:w-12 bg-[#d4af37]/40" />
+              </div>
+            </div>
 
-                  <div className="bg-white/[0.02] p-8 border border-white/10 rounded-2xl">
-                     <h4 className="text-[#d4af37] text-[12px] font-black uppercase tracking-[0.2em] mb-8 flex items-center gap-2 italic">
-                       <Zap size={16} /> Technical Specifications
-                     </h4>
-                     <div className="space-y-6">
-                       {current.specs.map((s, i) => (
-                         <div key={i} className="flex justify-between items-end border-b border-white/10 pb-4">
-                           <span className="text-[12px] text-gray-300 font-bold uppercase tracking-widest">{s.label}</span>
-                           <span className="text-base font-black uppercase italic text-[#d4af37]">{s.value}</span>
-                         </div>
-                       ))}
-                     </div>
-                  </div>
-
-                  <button 
-                    onClick={() => navigate('/contact')}
-                    className="w-full bg-[#d4af37] text-black py-5 rounded-xl text-sm font-black uppercase tracking-widest italic hover:bg-white transition-all shadow-xl active:scale-95"
+            <div className="w-full max-w-sm md:max-w-md relative z-50">
+              <button 
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="w-full bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-sm flex justify-between items-center font-bold uppercase text-[10px] md:text-[11px] tracking-[0.3em] hover:border-[#d4af37] transition-all group text-white"
+              >
+                <span className={activeTab ? 'text-[#d4af37]' : 'text-white'}>
+                  {activeTab || "Choose a Category"}
+                </span>
+                <ChevronDown size={18} className={`text-[#d4af37] transition-transform duration-500 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+              
+              <AnimatePresence>
+                {isDropdownOpen && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 5 }}
+                    className="absolute w-full bg-[#12121d] border border-white/10 mt-2 rounded-sm shadow-2xl overflow-hidden backdrop-blur-xl"
                   >
-                    Request Pricing
-                  </button>
+                    {Object.keys(productData).map((name) => (
+                      <button 
+                        key={name} 
+                        className="w-full text-left px-6 md:px-8 py-4 hover:bg-[#d4af37] hover:text-black font-bold uppercase text-[10px] border-b border-white/5 last:border-0 transition-colors flex justify-between items-center group text-white"
+                        onClick={() => { setActiveTab(name); setIsDropdownOpen(false); }}
+                      >
+                        {name}
+                        <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all" />
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          <AnimatePresence mode="wait">
+            {activeTab ? (
+              <motion.div 
+                ref={detailRef}
+                key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.4 }}
+                className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 items-start"
+              >
+                <div className="lg:col-span-7 space-y-4 md:space-y-6">
+                  <div 
+                    className="relative aspect-video rounded-sm overflow-hidden border border-white/20 bg-black group shadow-2xl cursor-zoom-in"
+                    onClick={() => setSelectedImg(current.imgSrc)}
+                  >
+                    <img src={current.imgSrc} alt={activeTab} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                       <Maximize2 className="text-[#d4af37] w-8 h-8 md:w-10 md:h-10" />
+                    </div>
+                  </div>
+                  
+                  <div className="border-l-4 border-[#d4af37] pl-4 md:pl-6">
+                    <span className="text-[#d4af37] text-[9px] md:text-[11px] font-black uppercase tracking-[0.5em]">{current.category}</span>
+                    <h2 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter mt-2 leading-none text-white">{activeTab}</h2>
+                  </div>
+                  <p className="text-white text-xs md:text-sm leading-relaxed font-normal tracking-wide max-w-2xl bg-white/5 p-4 rounded-sm border border-white/10">
+                    {current.description}
+                  </p>
                 </div>
 
-                {/* Right Column: Product Info */}
-                <div className="lg:col-span-7 space-y-10 text-center lg:text-left">
-                  <div className="space-y-4">
-                    <div className="inline-flex items-center gap-2 text-[#d4af37] text-[10px] font-black uppercase tracking-[0.4em]">
-                      <span className="w-6 h-[1px] bg-[#d4af37]"></span> {current.category}
-                    </div>
-                    <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter leading-tight mb-2">{activeTab}</h2>
-                    <h3 className="text-xl font-bold italic text-gray-400 uppercase tracking-tight">{current.tagline}</h3>
-                    
-                    <div className="flex flex-wrap gap-4 pt-6 justify-center lg:justify-start">
-                      {current.tiers.map((tier, i) => (
-                        <div key={i} className="bg-white/5 border border-white/10 px-6 py-4 rounded-xl shadow-2xl hover:border-[#d4af37]/50 transition-all min-w-[190px]">
-                          <span className="font-black text-white italic block text-sm mb-1 uppercase tracking-tight">{tier.name}</span>
-                          <span className="text-[#d4af37] text-[12px] font-black uppercase tracking-[0.1em]">{tier.detail}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    <p className="text-gray-300 text-base md:text-lg leading-relaxed font-medium mt-8 pt-8 border-t border-white/10 text-left">
-                      {current.description}
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                     <div className="bg-white/[0.02] p-6 border border-white/10 rounded-2xl">
-                        <h4 className="text-[#d4af37] text-[11px] font-black uppercase tracking-[0.2em] mb-5 flex items-center gap-2 italic">
-                          <CheckCircle2 size={16} /> Advanced Features
-                        </h4>
-                        <div className="space-y-3">
-                           {current.features.map((feat, idx) => (
-                             <div key={idx} className="flex items-center gap-3 text-[11px] font-bold uppercase text-gray-300 text-left">
-                               <div className="h-1.5 w-1.5 rounded-full bg-[#d4af37] shrink-0" /> {feat}
-                             </div>
-                           ))}
-                        </div>
-                     </div>
-
-                     <div className="bg-white/[0.02] p-6 border border-white/10 rounded-2xl">
-                        <h4 className="text-[#d4af37] text-[11px] font-black uppercase tracking-[0.2em] mb-5 flex items-center gap-2 italic">
-                          <Layers size={16} /> Film Composition
-                        </h4>
-                        <div className="space-y-3">
-                          {current.composition?.map((item, idx) => (
-                            <div key={idx} className="flex items-center gap-3 text-[11px] font-bold uppercase text-gray-300 text-left">
-                              <span className="text-[#d4af37] font-black">{idx + 1}.</span> {item}
-                            </div>
-                          ))}
-                        </div>
-                     </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-4">
+                <div className="lg:col-span-5 space-y-4 md:space-y-6">
+                  <div className="grid grid-cols-2 gap-2 md:gap-3">
                     {current.performance.map((p, i) => (
-                      <div key={i} className="flex flex-col items-center lg:items-start gap-3 text-center lg:text-left group">
-                        <div className="p-3 bg-white/5 text-[#d4af37] rounded-xl group-hover:bg-[#d4af37] group-hover:text-black transition-all">
-                          {React.cloneElement(p.icon, { size: 24 })}
-                        </div>
-                        <div>
-                          <h5 className="text-[11px] font-black uppercase italic mb-1 text-white">{p.title}</h5>
-                          <p className="text-[9px] text-gray-400 leading-tight uppercase font-bold">{p.desc}</p>
-                        </div>
+                      <div key={i} className="p-3 md:p-4 bg-white/10 rounded-sm border border-white/10 hover:border-[#d4af37] transition-colors shadow-lg">
+                        <div className="text-[#d4af37] mb-2">{p.icon}</div>
+                        <h5 className="text-[9px] md:text-[10px] font-black uppercase text-white mb-1">{p.title}</h5>
+                        <p className="text-[8px] md:text-[9px] text-gray-300 font-bold uppercase tracking-wider">{p.desc}</p>
                       </div>
                     ))}
                   </div>
 
-                  <div className="p-6 bg-[#d4af37]/5 border border-[#d4af37]/20 rounded-2xl flex gap-5 items-center">
-                     <Wrench size={24} className="text-[#d4af37] shrink-0" />
-                     <div className="text-left">
-                       <p className="text-[10px] font-black uppercase text-[#d4af37] italic tracking-widest">Care & Maintenance</p>
-                       <p className="text-[12px] text-white font-bold uppercase leading-tight mt-1">{current.maintenance}</p>
-                     </div>
+                  <div className="bg-black/60 border border-white/20 rounded-sm p-5 md:p-6 relative overflow-hidden shadow-2xl">
+                    <div className="flex justify-between items-center mb-4 md:mb-6">
+                      <h4 className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-white/60 flex items-center gap-2">
+                        <Layers size={14} /> Technical Core
+                      </h4>
+                      <span className="text-[8px] md:text-[9px] font-black border-2 border-[#d4af37] text-[#d4af37] px-2 py-1 rounded-sm uppercase">
+                        {current.warranty}
+                      </span>
+                    </div>
+
+                    <div className="space-y-1 md:space-y-2">
+                      {current.specs.map((s, i) => (
+                        <div key={i} className="flex justify-between items-center py-3 border-b border-white/5 last:border-0">
+                          <span className="text-[9px] md:text-[10px] text-gray-400 font-bold uppercase tracking-widest">{s.label}</span>
+                          <span className="text-[10px] md:text-xs font-black italic uppercase text-[#d4af37]">{s.value}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="mt-6 md:mt-8 space-y-4">
+                      <button onClick={() => navigate('/contact')} className="w-full py-4 bg-[#d4af37] text-black text-[10px] font-black uppercase tracking-[0.4em] hover:bg-white hover:scale-[1.01] transition-all duration-300 shadow-xl active:scale-95">
+                        Inquire About {activeTab}
+                      </button>
+                    </div>
                   </div>
                 </div>
+              </motion.div>
+            ) : (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                className="flex flex-col items-center justify-center -mt-4"
+              >
+                <motion.div 
+                  animate={{ y: [0, 5, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="text-[#d4af37] mb-4 flex flex-col items-center gap-1 opacity-40"
+                >
+                  <ChevronUp size={24} strokeWidth={1} />
+                  <div className="h-8 w-[1px] bg-gradient-to-t from-transparent via-[#d4af37] to-transparent" />
+                </motion.div>
 
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                <div className="relative overflow-hidden inline-block p-6 md:p-8 border border-white/5 bg-white/5 rounded-sm backdrop-blur-sm text-center min-w-[260px] md:min-w-[300px]">
+                   <motion.div 
+                    animate={{ left: ['-100%', '200%'] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                    className="absolute inset-0 w-1/3 h-full bg-gradient-to-r from-transparent via-[#d4af37]/5 to-transparent skew-x-12 pointer-events-none"
+                   />
+                   
+                   <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.8em] md:tracking-[1em] text-white/30">
+                     Awaiting Selection
+                   </p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
+
+      <AnimatePresence>
+        {selectedImg && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 md:p-12"
+            onClick={() => setSelectedImg(null)}
+          >
+            <motion.img initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }}
+              src={selectedImg} className="max-w-full max-h-full rounded-sm shadow-2xl border border-white/10 object-contain"
+              onClick={(e) => e.stopPropagation()} 
+            />
+            <button className="absolute top-6 right-6 text-white md:hidden" onClick={() => setSelectedImg(null)}>
+              <X size={30} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
