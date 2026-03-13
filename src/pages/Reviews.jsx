@@ -118,7 +118,7 @@ const Reviews = () => {
             <div className="w-full lg:col-span-7">
               <div className="relative w-full">
                 <div className="relative z-10 bg-white/5 backdrop-blur-md border border-white/10 p-2 md:p-6 rounded-xl">
-                  <div className="elfsight-app-7a6ed715-5bc4-48d8-91d3-0adf83256b6c min-h-[500px]"></div>
+                  <div className="elfsight-app-7a6ed715-5bc4-48d8-91d3-0adf83256b6c min-h-[300px]"></div>
                 </div>
                 <Quote className="absolute -bottom-12 -right-6 text-white/5 pointer-events-none hidden lg:block" size={200} />
               </div>
